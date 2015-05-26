@@ -7,5 +7,25 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <form action="/products" method="post">
+      <input type="file" name="file1">
+      <input type="file" name="file2">
+      <input type="file" name="file3">
+      <input type="file" name="file4">
+      <br>
+      <br>
+      <label>
+        GUID
+        <input type="text" name="guid">
+      </label>
+      <label>
+        Version
+        <input type="text" name="version">
+      </label>
+      <br>
+      <br>
+      <button type="submit">Upload</button>
+      <button type="reset">Clear</button>
+    </form>
   </body>
 </html>

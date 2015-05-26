@@ -29,4 +29,5 @@ node_modules
 # IntelliJ
 *.iml
 .idea/
-data/
+db/
+files/
