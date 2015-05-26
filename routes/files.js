@@ -1,4 +1,6 @@
 /**
+ * Handles retrieving lists of files
+ * Handles downloading files
  * Created by james on 5/26/15.
  */
 var express = require('express');
@@ -15,12 +17,25 @@ router.get('/', function (req, res){
 });
 
 router.get('/:guid', function(req, res){
-   var message = {};
-    message.success = 0;
+    var message = {};
+    message.success = 1;
     message.data = {};
-    message.data.message = 'no product version provided';
 
-    res.send(message);
+    fs.readdir('./data/files/' + req.params.guid, function(err, files){
+        if(err)
+        {
+            message.success = 0;
+            message.data.message = 'error downloading file';
+
+            res.send(message);
+        }
+        else
+        {
+            message.data.versions = files;
+
+            res.send(message);
+        }
+    })
 });
 
 router.get('/:guid/:version', function(req, res){

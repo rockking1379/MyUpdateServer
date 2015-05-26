@@ -1,4 +1,5 @@
 /**
+ * Handles getting version of products
  * Created by james on 5/26/15.
  */
 var sqlite3 = require('sqlite3');
