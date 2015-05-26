@@ -2,7 +2,20 @@
  * Created by james on 5/26/15.
  */
 var sqlite3 = require('sqlite3');
-var db = new sqlite3.Database('/home/james/git/MyUpdateServer/data/db/products.db');
+var fs = require('fs');
+var db;
+
+fs.realpath('./data/db/products.db', function(err, path){
+    if(err)
+    {
+        console.error('file path invalid');
+    }
+    else
+    {
+        db = new sqlite3.Database(path);
+    }
+});
+
 var express = require('express');
 var router = express.Router();
 
@@ -16,7 +29,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:guid', function(req, res){
-    db.all('SELECT product_id, product_name FROM Products WHERE product_guid=?', req.params.guid, function(err, productRows){
+    db.get('SELECT product_id, product_name FROM Products WHERE product_guid=?', req.params.guid, function(err, productRow){
         var message = {};
         message.success = 0;
         message.data = {};
@@ -30,8 +43,8 @@ router.get('/:guid', function(req, res){
         }
         else
         {
-            message.data.product_name = productRows[0].product_name;
-            db.all('SELECT version_major, version_minor, version_revision FROM Version WHERE product_id=?', productRows[0].product_id, function(err, versionRows){
+            message.data.product_name = productRow.product_name;
+            db.get('SELECT version_major, version_minor, version_revision FROM Version WHERE product_id=? ORDER BY version_major DESC, version_minor DESC, version_revision DESC', productRow.product_id, function(err, versionRow){
                if(err)
                {
                    message.success = 0;
@@ -43,9 +56,9 @@ router.get('/:guid', function(req, res){
                {
                    message.success = 1;
                    message.data.version = {};
-                   message.data.version.major = versionRows[0].version_major;
-                   message.data.version.minor = versionRows[0].version_minor;
-                   message.data.version.revision = versionRows[0].version_revision;
+                   message.data.version.major = versionRow.version_major;
+                   message.data.version.minor = versionRow.version_minor;
+                   message.data.version.revision = versionRow.version_revision;
 
                    res.send(message);
                }

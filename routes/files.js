@@ -3,8 +3,9 @@
  */
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
-router.get('/', function (err, res){
+router.get('/', function (req, res){
    var message = {};
     message.success = 0;
     message.data = {};
@@ -13,7 +14,7 @@ router.get('/', function (err, res){
     res.send(message);
 });
 
-router.get('/:guid', function(err, res){
+router.get('/:guid', function(req, res){
    var message = {};
     message.success = 0;
     message.data = {};
@@ -22,17 +23,42 @@ router.get('/:guid', function(err, res){
     res.send(message);
 });
 
-router.get('/:guid/:version', function(err, res){
+router.get('/:guid/:version', function(req, res){
     var message = {};
     message.success = 1;
     message.data = {};
-    message.data.files = {};
 
-    res.send(message);
+    fs.readdir('./data/files/' + req.params.guid + '/' + req.params.version, function(err, files){
+        if(err)
+        {
+            message.success = 0;
+            message.data.message = 'error reading directory';
+
+            res.send(message);
+        }
+        else
+        {
+            message.data.files = files;
+
+            res.send(message);
+        }
+    });
 });
 
-router.get('/:guid/:version/:filename', function(err, res){
-    //download files
+router.get('/:guid/:version/:filename', function(req, res){
+    fs.realpath('./data/files/' + req.params.guid + '/' + req.params.version + '/' + req.params.filename, function(err, path){
+        if(err)
+        {
+            var message = {};
+            message.success = 0;
+            message.data = {};
+            message.data.message = 'error downloading file';
+        }
+        else
+        {
+            res.download(path);
+        }
+    })
 });
 
 module.exports = router;
