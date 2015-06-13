@@ -38,32 +38,39 @@ router.get('/:guid', function(req, res){
         if(err)
         {
             message.success = 0;
-            message.data.message = 'invalid product guid';
-
+            message.data.message = 'database error occured';
+            res.status(500);
             res.send(message);
         }
         else
         {
-            message.data.product_name = productRow.product_name;
-            db.get('SELECT version_major, version_minor, version_revision FROM Version WHERE product_id=? ORDER BY version_major DESC, version_minor DESC, version_revision DESC', productRow.product_id, function(err, versionRow){
-               if(err)
-               {
-                   message.success = 0;
-                   message.data.messsage = 'database error occurred';
+            if(undefined != productRow) {
+                message.data.product_name = productRow.product_name;
+                db.get('SELECT version_major, version_minor, version_revision FROM Version WHERE product_id=? ORDER BY version_major DESC, version_minor DESC, version_revision DESC', productRow.product_id, function (err, versionRow) {
+                    if (err) {
+                        message.success = 0;
+                        message.data.messsage = 'database error occurred';
+                        res.status(500);
+                        res.send(message);
+                    }
+                    else {
+                        message.success = 1;
+                        message.data.version = {};
+                        message.data.version.major = versionRow.version_major;
+                        message.data.version.minor = versionRow.version_minor;
+                        message.data.version.revision = versionRow.version_revision;
 
-                   res.send(message);
-               }
-                else
-               {
-                   message.success = 1;
-                   message.data.version = {};
-                   message.data.version.major = versionRow.version_major;
-                   message.data.version.minor = versionRow.version_minor;
-                   message.data.version.revision = versionRow.version_revision;
-
-                   res.send(message);
-               }
-            });
+                        res.send(message);
+                    }
+                });
+            }
+            else
+            {
+                message.success = 0;
+                message.data.message = 'invalid product guid';
+                res.status(400);
+                res.send(message);
+            }
         }
     })
 });
