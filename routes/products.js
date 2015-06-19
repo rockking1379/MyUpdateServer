@@ -78,9 +78,10 @@ router.get('/:guid', function(req, res){
 router.post('/', function(req, res){
     console.log(JSON.stringify(req.headers));
     console.log(JSON.stringify(req.body));
-    console.log(JSON.stringify(req.files.file1));
+    console.log(JSON.stringify(req.files));
 
-    res.send('success');
+
+    res.render('success', {title:'Success', version:req.body.version, guid:req.body.guid});
 });
 
 module.exports = router;

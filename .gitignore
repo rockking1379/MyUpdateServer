@@ -29,8 +29,11 @@ node_modules
 # IntelliJ
 *.iml
 .idea/
+
+# directories
 db/
 files/
+uploads/
 
 # start scripts
 *.sh
