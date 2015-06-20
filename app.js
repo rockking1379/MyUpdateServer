@@ -4,6 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var stormpath = require('express-stormpath');
 var fs = require('fs');
 var multer = require('multer');
 var routes = require('./routes/index');
@@ -12,10 +13,17 @@ var products = require('./routes/products');
 var files = require('./routes/files');
 
 var app = express();
+var sPathMiddle = stormpath.init(app, {
+  apiKeyFile:'./data/stormpath/apiKey-3DAP3U05ID7J5G0JPIAOUV1WY.properties',
+  application:'https://api.stormpath.com/v1/applications/4LGCOIWnltQX6wx8wHROu3',
+  secretKey:'just_a_simple_test_string_for_using_this',
+  expandCustomData:true,
+  enableForgotPassword:false});
+app.use(sPathMiddle);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
 

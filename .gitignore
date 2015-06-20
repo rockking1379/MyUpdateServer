@@ -31,8 +31,7 @@ node_modules
 .idea/
 
 # directories
-db/
-files/
+data/
 uploads/
 
 # start scripts
