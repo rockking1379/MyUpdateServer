@@ -8,6 +8,9 @@ var router = express.Router();
 
 router.post('/', function (req, res){
    childProcess.exec('./hooks/post-receive');
+
+    res.status(200);
+    res.send();
 });
 
 module.exports = router;
