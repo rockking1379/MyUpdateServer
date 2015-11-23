@@ -11,6 +11,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var products = require('./routes/products');
 var files = require('./routes/files');
+var github = require('./routes/github');
 
 var app = express();
 var sPathMiddle = stormpath.init(app, {
@@ -41,6 +42,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/products', products);
 app.use('/files', files);
+app.use('github', github);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
