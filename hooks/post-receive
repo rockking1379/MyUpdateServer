@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pm2 stop update
+git pull
+pm2 start bin/www --name="update"
