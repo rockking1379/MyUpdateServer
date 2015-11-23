@@ -42,7 +42,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/products', products);
 app.use('/files', files);
-app.use('github', github);
+app.use('/github', github);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
